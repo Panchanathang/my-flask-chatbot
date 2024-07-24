@@ -1,1 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Meta AI</title>
 
+
+<style>
+    #chatbox {
+        width: 600px;
+        margin: 0 auto;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    #messages {
+        height: 300px;
+        overflow-y: auto;
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 15px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+    }
+
+    #messages p {
+        margin: 5px 0;
+    }
+
+    #userMessage {
+        width: calc(100% - 80px);
+        padding: 10px;
+        border: 2px solid #4caf50;
+        border-radius: 5px;
+        margin-right: 5px;
+    }
+
+    button {
+        padding: 10px 15px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    .user-message {
+        text-align: right;
+        color: #4caf50;
+        font-weight: bold;
+    }
+
+    .bot-message {
+        text-align: left;
+        color: #007bff;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+<div id="chatbox">
+    <h4>Chat with Meta here</h4>
+    <div id="messages"></div>
+    <input type="text" id="userMessage" placeholder="Type a message..."/>
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    async function sendMessage() {
+    const userMessage = document.getElementById('userMessage').value.trim();
+
+    if (!userMessage) {
+        alert("Please enter a message.");
+        return;
+    }
+
+    document.getElementById('messages').innerHTML += `<p class="user-message"><b>You:</b> ${userMessage}</p>`;
+
+    try {
+        const response = await fetch('http://127.0.0.1:5000/endpoint', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: userMessage })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const botResponse = data.response;
+        document.getElementById('messages').innerHTML += `<p class="bot-message"><b>Bot:</b> ${botResponse}</p>`;
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('messages').innerHTML += `<p class="bot-message"><b>Bot:</b> I'm having trouble understanding your message. Please try again later.</p>`;
+    } finally {
+        document.getElementById('userMessage').value = '';
+        document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+    }
+}
+
+</script>
+</body>
+</html>
