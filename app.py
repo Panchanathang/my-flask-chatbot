@@ -7,7 +7,7 @@ from datetime import datetime
 from timezonefinder import TimezoneFinder
 import pytz
 
-from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -16,9 +16,10 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Initialize the Meta AI model and tokenizer
-model_name = "facebook/blenderbot-400M-distill"  # Example model name
-tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
-model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
+model_name = "facebook/blenderbot-400M-distill"  # Current model
+# model_name = "sshleifer/tiny-gpt2"  # Example smaller model
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name)
 
 def get_time_in_place(location):
     try:
