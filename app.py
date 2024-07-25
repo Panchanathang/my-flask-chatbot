@@ -11,9 +11,10 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Model and tokenizer initialization
-model_name = "facebook/blenderbot-400M-distill"
+model_name = "facebook/blenderbot-90M"
 tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
 model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
+
 
 def get_meta_ai_response(prompt):
     try:
