@@ -30,7 +30,6 @@ manual_responses = {
     "capital": ["capital of France"],
     "book": ["favorite book"],
     "ai": ["what do you think about AI"],
-
 }
 
 # Manual responses mapped to keywords
@@ -51,7 +50,7 @@ responses = {
     "ai": "AI has the potential to transform many industries and make our lives easier, but it also raises important ethical questions."
 }
 
-
+# Function to get responses from Meta AI model
 def get_meta_ai_response(prompt):
     model_name = "facebook/blenderbot-90M-distill"
     tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
@@ -65,6 +64,7 @@ def get_meta_ai_response(prompt):
     except Exception as e:
         logging.error(f"Error getting response from Meta AI model: {e}")
         return "I'm sorry, I couldn't process your request at the moment."
+
 def get_time_in_place(location):
     try:
         geocode_url = 'https://nominatim.openstreetmap.org/search'
@@ -86,8 +86,7 @@ def get_time_in_place(location):
     except requests.RequestException as e:
         logging.error(f"Error getting time in place: {e}")
         return "Sorry, I couldn't retrieve the time information."
-    
-    
+
 def get_weather(location):
     try:
         api_key = '719bd80d49c84259bedd8616a7179ca7' 
@@ -111,14 +110,12 @@ def get_weather(location):
         logging.error(f"Error getting weather: {e}")
         return "I'm sorry, I couldn't retrieve the weather information."
 
-
 def find_response(message):
     message = message.lower()
     for category, keywords in manual_responses.items():
         if any(keyword in message for keyword in keywords):
             return responses[category]
     return 'Sorry, I don\'t understand that request.'
-
 
 @app.route('/')
 def home():
