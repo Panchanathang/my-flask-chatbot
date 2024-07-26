@@ -84,7 +84,9 @@
     document.getElementById('messages').innerHTML += `<p class="user-message"><b>You:</b> ${userMessage}</p>`;
 
     try {
-        const response = await fetch('https://my-flask-chatbot.onrender.com/endpoint', {
+        //const response = await fetch('https://my-flask-chatbot.onrender.com/endpoint', {
+        const response = await fetch('https://my-flask-chatbot-kjou.onrender.com/endpoint', {
+        
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
