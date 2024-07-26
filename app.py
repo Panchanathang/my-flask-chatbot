@@ -16,14 +16,16 @@ def get_meta_ai_response(prompt):
     model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
     
     try:
-        inputs = tokenizer(prompt, return_tensors="pt")
-        reply_ids = model.generate(**inputs)
-        response = tokenizer.decode(reply_ids[0], skip_special_tokens=True)
-        return response
+        inputs = tokenizer(prompt, return_tensors="pt", padding=True)
+        reply_ids = model.generate(**inputs, max_length=512, num_return_sequences=1)
+        responses = []
+        for reply_id in reply_ids:
+            response = tokenizer.decode(reply_id, skip_special_tokens=True)
+            responses.append(response)
+        return responses
     except Exception as e:
         logging.error(f"Error getting response from Meta AI model: {e}")
         return "I'm sorry, I couldn't process your request at the moment."
-
 @app.route('/')
 def home():
     return render_template('index.html')
