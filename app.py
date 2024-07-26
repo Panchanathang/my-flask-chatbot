@@ -53,19 +53,18 @@ responses = {
 
 
 def get_meta_ai_response(prompt):
-model_name = "facebook/blenderbot-90M-distill"
-tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
-model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
+    model_name = "facebook/blenderbot-90M-distill"
+    tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
+    model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
 
-try:
-inputs = tokenizer(prompt, return_tensors="pt")
-reply_ids = model.generate(**inputs)
-response = tokenizer.decode(reply_ids[0], skip_special_tokens=True)
-return response
-except Exception as e:
-logging.error(f"Error getting response from Meta AI model: {e}")
-return "I'm sorry, I couldn't process your request at the moment."
-
+    try:
+        inputs = tokenizer(prompt, return_tensors="pt")
+        reply_ids = model.generate(**inputs)
+        response = tokenizer.decode(reply_ids[0], skip_special_tokens=True)
+        return response
+    except Exception as e:
+        logging.error(f"Error getting response from Meta AI model: {e}")
+        return "I'm sorry, I couldn't process your request at the moment."
 def get_time_in_place(location):
     try:
         geocode_url = 'https://nominatim.openstreetmap.org/search'
