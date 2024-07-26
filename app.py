@@ -7,6 +7,8 @@ import pytz
 import requests
 from timezonefinder import TimezoneFinder
 from transformers import BlenderbotTokenizer, BlenderbotForConditionalGeneration
+from huggingface_hub import login
+
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -50,20 +52,25 @@ responses = {
     "ai": "AI has the potential to transform many industries and make our lives easier, but it also raises important ethical questions."
 }
 
-# Function to get responses from Meta AI model
+login(token="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")
+
 def get_meta_ai_response(prompt):
-    model_name = "facebook/blenderbot-90M-distill"
+    model_name = "facebook/blenderbot-400M-distill"  # Updated model name
     tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
     model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
-
+    
     try:
-        inputs = tokenizer(prompt, return_tensors="pt")
-        reply_ids = model.generate(**inputs)
-        response = tokenizer.decode(reply_ids[0], skip_special_tokens=True)
-        return response
+        inputs = tokenizer(prompt, return_tensors="pt", padding=True)
+        reply_ids = model.generate(**inputs, max_length=512, num_return_sequences=1)
+        responses = []
+        for reply_id in reply_ids:
+            response = tokenizer.decode(reply_id, skip_special_tokens=True)
+            responses.append(response)
+        return responses
     except Exception as e:
         logging.error(f"Error getting response from Meta AI model: {e}")
         return "I'm sorry, I couldn't process your request at the moment."
+        
 
 def get_time_in_place(location):
     try:
