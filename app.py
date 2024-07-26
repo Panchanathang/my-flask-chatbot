@@ -56,8 +56,8 @@ def get_meta_ai_response(prompt):
 model_name = "facebook/blenderbot-90M-distill"
 tokenizer = BlenderbotTokenizer.from_pretrained(model_name)
 model = BlenderbotForConditionalGeneration.from_pretrained(model_name)
-    
-    try:
+
+try:
 inputs = tokenizer(prompt, return_tensors="pt")
 reply_ids = model.generate(**inputs)
 response = tokenizer.decode(reply_ids[0], skip_special_tokens=True)
